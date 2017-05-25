@@ -6,6 +6,7 @@ namespace SilentRoomControllerv2
     {
         public class Light
         {
+            public string ID { get; set; }
             [JsonProperty("state")]
             public State State { get; set; }
             [JsonProperty("type")]
@@ -17,7 +18,7 @@ namespace SilentRoomControllerv2
             [JsonProperty("manufacturername")]
             public string Manufacturer { get; set; }
             [JsonProperty("uniqueid")]
-            public string UID { get; set; }
+            public string UniqueID { get; set; }
             [JsonProperty("swversion")]
             public string SoftwareVersion { get; set; }
         }

@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
+using static SilentRoomControllerv2.Program;
 
 namespace SilentRoomControllerv2
 {
@@ -25,49 +20,71 @@ namespace SilentRoomControllerv2
         public static HueCommand Command { get; set; }
         public static string CommandArguments { get; set; }
 
+        public static string BaseURI
+        {
+            get
+            {
+                return string.Format("http://{0}/api/{1}/", BridgeIP, APIKey);
+            }
+        }
+        public static string APIUri
+        {
+            get
+            {
+                return string.Format("http://{0}/api", BridgeIP);
+            }
+        }
+
         public static void Main(string[] args)
         {
             try
             {
-                // Indicates if anything is left blank.
-                bool isNull = false;
-
                 // Stores all arguments into a public variable.
                 Args = args;
+            }
+            catch (Exception) { }
 
-                // Parses the arguments and store them into variables.
-                #region Command-Line Arguments Parser
-                if (Args[0] == "-ip")
-                    BridgeIP = Args[1];
+            // Checks if a previous setup was successful.
+            Utilities.CheckSetup();
+        }
+
+        public static void ParseArgs()
+        {
+
+            // Indicates if anything is left blank.
+            bool isNull = false;
+
+            // Parses the arguments and store them into variables.
+            #region Command-Line Arguments Parser
+            try
+            {
+                if (Args[0] == "-id")
+                    LightID = int.Parse(Args[1]);
                 else isNull = true;
 
-                if (Args[2] == "-key")
-                    APIKey = Args[3];
-                else isNull = true;
-
-                if (Args[4] == "-id")
-                    LightID = int.Parse(Args[5]);
-                else isNull = true;
-
-                if (Args[6] == "-command")
-                    Command = new HueCommand((Commands)int.Parse(Args[7]));
+                if (Args[2] == "-command")
+                    Command = new HueCommand((Commands)int.Parse(Args[3]));
                 else isNull = true;
 
                 try
                 {
-                    if (Args[8] != null)
-                        CommandArguments = Args[8];
+                    if (Args[4] != null)
+                        CommandArguments = Args[4];
                 }
                 catch (Exception) { }
-                
-                #endregion
+            }
+            catch (Exception) { Utilities.PrintUsage(); }
 
-                // Checks if the [isNull] variable is set to true/false.
+            #endregion
+
+            // Checks if the anything is left blank.
+            try
+            {
                 if (isNull != true)
                     Command.Execute(BridgeIP, APIKey, LightID, CommandArguments);
                 else Utilities.PrintUsage();
             }
-            catch (Exception) { Utilities.PrintUsage(); }
+            catch (Exception) { }
         }
     }
 
@@ -82,10 +99,7 @@ namespace SilentRoomControllerv2
         public void Execute(string ipAddress, string apiKey, int lightID, string arguments = null)
         {
             string command = "";
-            string targetURI = "http://" +
-                ipAddress + "/api/" +
-                apiKey + "/lights/" +
-                lightID + "/state";
+            string targetURI = BaseURI + "lights/" + lightID + "/state";
 
             switch (SetCommand)
             {
