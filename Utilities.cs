@@ -26,13 +26,18 @@ namespace SilentRoomControllerv2
                 "",
                 "Usage:",
                 "   SilentRoomController.exe -id <light_id> -command <command> [command_args]",
+                "   You can command multiple lights at a time. Seperate multiple lights with a comma ','.",
+                "",
+                "   For example:",
+                "       SilentRoomController.exe -id 1,2,3 -command 2",
                 "",
                 "Available Commands:",
                 "   - [1] COMMAND_ON: Turns on the specified light.",
                 "   - [2] COMMAND_OFF: Turns of the specified light.",
                 "   - [3] COMMAND_TOGGLE: Toggles the specified light.",
-                "   - [4] COMMAND_SET_BRIGHTNESS: (*) Sets the brightness of the specified light.",
-                "   - [5] COMMAND_SET_HUE: (*) Sets the Hue color value of the specified light.",
+                "   - [4] COMMAND_SET_BRIGHTNESS: (*) Sets the brightness.",
+                "   - [5] COMMAND_SET_HUE: (*) Sets the Hue color value.",
+                "   - [6] COMMAND_SET_SATURATION: (*) Sets the color saturation.",
                 "",
                 "The commands marked with '(*)' need to have a parameter in the [command_args] parameter."
             };
@@ -306,7 +311,14 @@ namespace SilentRoomControllerv2
             Console.WriteLine("======== [ AVAILABLE LIGHTS ] ========");
             foreach (Light light in lights)
             {
-                Console.WriteLine("[" + light.ID + "] " + light.Name);
+                if(light.State.Reachable == true)
+                    Console.WriteLine("[" + light.ID + "] " + light.Name);
+                else if(light.State.Reachable == false)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("[" + light.ID + "] " + light.Name + " (Unreachable)");
+                    Console.ResetColor();
+                } 
             }
             Console.WriteLine("======== [ -=+=-=+=-=+=-=+= ] ========\n");
         }

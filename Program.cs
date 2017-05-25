@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using static SilentRoomControllerv2.Program;
 
 namespace SilentRoomControllerv2
@@ -16,7 +17,7 @@ namespace SilentRoomControllerv2
         public static string[] Args { get; set; }
         public static string BridgeIP { get; set; }
         public static string APIKey { get; set; }
-        public static int LightID { get; set; }
+        public static int[] LightIDs { get; set; }
         public static HueCommand Command { get; set; }
         public static string CommandArguments { get; set; }
 
@@ -59,7 +60,17 @@ namespace SilentRoomControllerv2
             try
             {
                 if (Args[0] == "-id")
-                    LightID = int.Parse(Args[1]);
+                {
+                    string[] stringIDs = Args[1].Split(',');
+                    List<int> IDs = new List<int>();
+                    foreach (var id in stringIDs)
+                    {
+                        int finalID = int.Parse(id);
+                        IDs.Add(finalID);
+                    }
+
+                    LightIDs = IDs.ToArray();
+                }
                 else isNull = true;
 
                 if (Args[2] == "-command")
@@ -81,7 +92,10 @@ namespace SilentRoomControllerv2
             try
             {
                 if (isNull != true)
-                    Command.Execute(BridgeIP, APIKey, LightID, CommandArguments);
+                    foreach (var id in LightIDs)
+                    {
+                        Command.Execute(BridgeIP, APIKey, id, CommandArguments);
+                    }
                 else Utilities.PrintUsage();
             }
             catch (Exception) { }
@@ -118,6 +132,9 @@ namespace SilentRoomControllerv2
                 case Commands.COMMAND_SET_HUE:
                     command = "{\"hue\":" + arguments + "}";
                     break;
+                case Commands.COMMAND_SET_SATURATION:
+                    command = "{\"sat\":" + arguments + "}";
+                    break;
                 default:
                     break;
             }
@@ -132,6 +149,7 @@ namespace SilentRoomControllerv2
         COMMAND_OFF = 2,
         COMMAND_TOGGLE = 3,
         COMMAND_SET_BRIGHTNESS = 4,
-        COMMAND_SET_HUE = 5
+        COMMAND_SET_HUE = 5,
+        COMMAND_SET_SATURATION = 6
     }
 }
