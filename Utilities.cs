@@ -22,8 +22,6 @@ namespace SilentRoomControllerv2
 
             string[] usage = new string[]
             {
-                "-=+ [ SilentRoomController 2.0 ] +=-",
-                "",
                 "Usage:",
                 "   SilentRoomController.exe -id <light_id> -command <command> [command_args]",
                 "   You can command multiple lights at a time. Seperate multiple lights with a comma ','.",
@@ -38,6 +36,8 @@ namespace SilentRoomControllerv2
                 "   - [4] COMMAND_SET_BRIGHTNESS: (*) Sets the brightness.",
                 "   - [5] COMMAND_SET_HUE: (*) Sets the Hue color value.",
                 "   - [6] COMMAND_SET_SATURATION: (*) Sets the color saturation.",
+                "   - [7] COMMAND_ENABLE_COLORLOOP: Enables the color-loop effect.",
+                "   - [8] COMMAND_DISABLE_COLORLOOP: Disables the color-loop effect.",
                 "",
                 "The commands marked with '(*)' need to have a parameter in the [command_args] parameter."
             };
@@ -308,7 +308,8 @@ namespace SilentRoomControllerv2
             Light[] lights = GetLights(ipAddress, apiKey);
             Console.Clear();
 
-            Console.WriteLine("======== [ AVAILABLE LIGHTS ] ========");
+            Console.WriteLine("-=+ [ SilentRoomController 2.0 ] +=-");
+            Console.WriteLine("\n======== [ AVAILABLE LIGHTS ] ========");
             foreach (Light light in lights)
             {
                 if(light.State.Reachable == true)

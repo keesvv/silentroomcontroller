@@ -94,7 +94,10 @@ namespace SilentRoomControllerv2
                 if (isNull != true)
                     foreach (var id in LightIDs)
                     {
-                        Command.Execute(BridgeIP, APIKey, id, CommandArguments);
+                        bool bypassMsg = false;
+                        if (Command.SetCommand == Commands.COMMAND_TOGGLE)
+                            bypassMsg = true;
+                        Command.Execute(BridgeIP, APIKey, id, CommandArguments, bypassMsg);
                     }
                 else Utilities.PrintUsage();
             }
@@ -110,7 +113,7 @@ namespace SilentRoomControllerv2
             SetCommand = command;
         }
 
-        public void Execute(string ipAddress, string apiKey, int lightID, string arguments = null)
+        public void Execute(string ipAddress, string apiKey, int lightID, string arguments = null, bool bypassMessage = false)
         {
             string command = "";
             string targetURI = BaseURI + "lights/" + lightID + "/state";
@@ -135,11 +138,38 @@ namespace SilentRoomControllerv2
                 case Commands.COMMAND_SET_SATURATION:
                     command = "{\"sat\":" + arguments + "}";
                     break;
+                case Commands.COMMAND_ENABLE_COLORLOOP:
+                    command = "{\"effect\":\"colorloop\"}";
+                    break;
+                case Commands.COMMAND_DISABLE_COLORLOOP:
+                    command = "{\"effect\":\"none\"}";
+                    break;
                 default:
                     break;
             }
 
-            Utilities.SendPUTRequest(targetURI, command);
+            bool success = false;
+            try
+            {
+                Utilities.SendPUTRequest(targetURI, command);
+                success = true;
+            }
+            catch (Exception)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Unable to execute command " + SetCommand.ToString() + ".");
+                Console.ResetColor();
+                success = false;
+            }
+            finally
+            {
+                if (success && bypassMessage != true)
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine("The command " + SetCommand.ToString() + " executed successfully at light ID " + lightID + ".");
+                    Console.ResetColor();
+                }
+            }
         }
     }
 
@@ -150,6 +180,8 @@ namespace SilentRoomControllerv2
         COMMAND_TOGGLE = 3,
         COMMAND_SET_BRIGHTNESS = 4,
         COMMAND_SET_HUE = 5,
-        COMMAND_SET_SATURATION = 6
+        COMMAND_SET_SATURATION = 6,
+        COMMAND_ENABLE_COLORLOOP = 7,
+        COMMAND_DISABLE_COLORLOOP = 8
     }
 }
