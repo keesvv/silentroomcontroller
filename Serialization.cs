@@ -44,5 +44,13 @@ namespace SilentRoomControllerv2
             [JsonProperty("reachable")]
             public bool Reachable { get; set; }
         }
+
+        public class Bridge
+        {
+            [JsonProperty("id")]
+            public string ID { get; set; }
+            [JsonProperty("internalipaddress")]
+            public string IPAddress { get; set; }
+        }
     }
 }

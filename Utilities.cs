@@ -173,7 +173,25 @@ namespace SilentRoomControllerv2
             Console.BackgroundColor = ConsoleColor.DarkBlue;
             Console.ForegroundColor = ConsoleColor.Yellow;
 
-            Console.Write("\nBridge IP Address: ");
+            Console.WriteLine("\nSearching for bridges on the local network...");
+            try
+            {
+                int bridgeCount = 0;
+                Bridge[] bridges = LocateBridges();
+                Console.WriteLine("\n======== [ FOUND BRIDGES ] ========");
+                foreach (var bridge in bridges)
+                {
+                    bridgeCount++;
+                    Console.WriteLine("Bridge " + bridgeCount + ": " + bridge.IPAddress);
+                }
+                Console.WriteLine("======== [ -=+=-=+=-=+=- ] ========\n");
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Unable to locate bridges. Please enter the bridge IP address manually.");
+            }
+
+            Console.Write("Bridge IP Address: ");
             ipAddress = Console.ReadLine();
             BridgeIP = ipAddress;
 
@@ -287,6 +305,13 @@ namespace SilentRoomControllerv2
             }
 
             return lights.ToArray();
+        }
+
+        public static Bridge[] LocateBridges()
+        {
+            string rawJSON = SendGETRequest("https://www.meethue.com/api/nupnp");
+            Bridge[] bridges = JsonConvert.DeserializeObject<Bridge[]>(rawJSON);
+            return bridges;
         }
 
         public static void ToggleLight(string ipAddress, string apiKey, int lightID)
