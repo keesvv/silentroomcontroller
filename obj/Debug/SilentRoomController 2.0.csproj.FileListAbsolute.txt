@@ -6,3 +6,10 @@ D:\Documenten\Programmeren\SilentRoomController 2.0\SilentRoomController 2.0\obj
 D:\Documenten\Programmeren\SilentRoomController 2.0\SilentRoomController 2.0\obj\Debug\SilentRoomController.pdb
 D:\Documenten\Programmeren\SilentRoomController 2.0\SilentRoomController 2.0\bin\Debug\Newtonsoft.Json.dll
 D:\Documenten\Programmeren\SilentRoomController 2.0\SilentRoomController 2.0\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Kees\Documents\Programmeren\SilentRoomController-2.0\bin\Debug\SilentRoomController.exe.config
+C:\Users\Kees\Documents\Programmeren\SilentRoomController-2.0\bin\Debug\SilentRoomController.exe
+C:\Users\Kees\Documents\Programmeren\SilentRoomController-2.0\bin\Debug\SilentRoomController.pdb
+C:\Users\Kees\Documents\Programmeren\SilentRoomController-2.0\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Kees\Documents\Programmeren\SilentRoomController-2.0\obj\Debug\SilentRoomController 2.0.csprojResolveAssemblyReference.cache
+C:\Users\Kees\Documents\Programmeren\SilentRoomController-2.0\obj\Debug\SilentRoomController.exe
+C:\Users\Kees\Documents\Programmeren\SilentRoomController-2.0\obj\Debug\SilentRoomController.pdb

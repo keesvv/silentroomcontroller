@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Threading;
+using System.Net.NetworkInformation;
 
 namespace SilentRoomControllerv2
 {
@@ -18,33 +19,43 @@ namespace SilentRoomControllerv2
         public static void PrintUsage()
         {
             Console.Clear();
-            PrintLights(BridgeIP, APIKey);
-
-            string[] usage = new string[]
+            bool pingSuccess = PingBridge(BridgeIP, APIKey);
+            if (pingSuccess)
             {
-                "Usage:",
-                "   SilentRoomController.exe -id <light_id> -command <command> [command_args]",
-                "   You can command multiple lights at a time. Seperate multiple lights with a comma ','.",
-                "",
-                "   For example:",
-                "       SilentRoomController.exe -id 1,2,3 -command 2",
-                "",
-                "Available Commands:",
-                "   - [1] COMMAND_ON: Turns on the specified light.",
-                "   - [2] COMMAND_OFF: Turns of the specified light.",
-                "   - [3] COMMAND_TOGGLE: Toggles the specified light.",
-                "   - [4] COMMAND_SET_BRIGHTNESS: (*) Sets the brightness.",
-                "   - [5] COMMAND_SET_HUE: (*) Sets the Hue color value.",
-                "   - [6] COMMAND_SET_SATURATION: (*) Sets the color saturation.",
-                "   - [7] COMMAND_ENABLE_COLORLOOP: Enables the color-loop effect.",
-                "   - [8] COMMAND_DISABLE_COLORLOOP: Disables the color-loop effect.",
-                "",
-                "The commands marked with '(*)' need to have a parameter in the [command_args] parameter."
-            };
+                string[] usage = new string[]
+                {
+                    "Usage:",
+                    "   SilentRoomController.exe -id <light_id> -command <command> [command_args]",
+                    "   You can command multiple lights at a time. Seperate multiple lights with a comma ','.",
+                    "",
+                    "   For example:",
+                    "       SilentRoomController.exe -id 1,2,3 -command 2",
+                    "",
+                    "   If you would like to perform multiple commands at once, try SilentRoomController Console:",
+                    "       SilentRoomController.exe --console",
+                    "",
+                    "Available Commands:",
+                    "   - [1] COMMAND_ON: Turns on the specified light.",
+                    "   - [2] COMMAND_OFF: Turns of the specified light.",
+                    "   - [3] COMMAND_TOGGLE: Toggles the specified light.",
+                    "   - [4] COMMAND_SET_BRIGHTNESS: (*) Sets the brightness.",
+                    "   - [5] COMMAND_SET_HUE: (*) Sets the Hue color value.",
+                    "   - [6] COMMAND_SET_SATURATION: (*) Sets the color saturation.",
+                    "   - [7] COMMAND_ENABLE_COLORLOOP: Enables the color-loop effect.",
+                    "   - [8] COMMAND_DISABLE_COLORLOOP: Disables the color-loop effect.",
+                    "",
+                    "The commands marked with '(*)' need to have a parameter in the [command_args] parameter."
+                };
 
-            foreach (string line in usage)
+                foreach (string line in usage)
+                {
+                    Console.WriteLine(line);
+                }
+            }
+
+            else
             {
-                Console.WriteLine(line);
+                Console.WriteLine("The bridge failed to ping. The program will now exit.");
             }
         }
 
@@ -327,26 +338,53 @@ namespace SilentRoomControllerv2
             catch (Exception ex) { Console.WriteLine(ex.Message); }
         }
 
+        public static bool PingBridge(string ipAddress, string apiKey)
+        {
+            Console.WriteLine("Pinging bridge...");
+            Ping bridgePing = new Ping();
+            IPStatus status = new IPStatus();
+            bridgePing.PingCompleted += (o, ev) => {
+                status = ev.Reply.Status;
+            };
+
+            bridgePing.Send(ipAddress);
+
+            if (status == IPStatus.Success)
+                return true;
+            else
+                return false;
+        }
+
         public static void PrintLights(string ipAddress, string apiKey)
         {
             Console.WriteLine("Loading available lights...");
-            Light[] lights = GetLights(ipAddress, apiKey);
+            Light[] lights = new Light[] { };
+            try
+            {
+                lights = GetLights(ipAddress, apiKey);
+            } catch(Exception) { }
+
             Console.Clear();
 
-            Console.WriteLine("-=+ [ SilentRoomController 2.0 ] +=-");
-            Console.WriteLine("\n======== [ AVAILABLE LIGHTS ] ========");
-            foreach (Light light in lights)
+            if (lights == null)
+                Console.WriteLine("Failed to load available lights. The bridge may be unreachable.");
+            else
             {
-                if(light.State.Reachable == true)
-                    Console.WriteLine("[" + light.ID + "] " + light.Name);
-                else if(light.State.Reachable == false)
+                Console.WriteLine("-=+ [ SilentRoomController 2.0 ] +=-");
+                Console.WriteLine("\n======== [ AVAILABLE LIGHTS ] ========");
+                foreach (Light light in lights)
                 {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("[" + light.ID + "] " + light.Name + " (Unreachable)");
-                    Console.ResetColor();
-                } 
+                    if (light.State.Reachable == true)
+                        Console.WriteLine("[" + light.ID + "] " + light.Name);
+                    else if (light.State.Reachable == false)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("[" + light.ID + "] " + light.Name + " (Unreachable)");
+                        Console.ResetColor();
+                    }
+                }
+                Console.WriteLine("======== [ -=+=-=+=-=+=-=+= ] ========\n");
             }
-            Console.WriteLine("======== [ -=+=-=+=-=+=-=+= ] ========\n");
         }
     }
 }
