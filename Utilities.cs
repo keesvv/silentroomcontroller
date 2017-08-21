@@ -19,11 +19,9 @@ namespace SilentRoomControllerv2
         public static void PrintUsage()
         {
             Console.Clear();
-            bool pingSuccess = PingBridge(BridgeIP, APIKey);
-            if (pingSuccess)
+            PrintLights(BridgeIP, APIKey);
+            string[] usage = new string[]
             {
-                string[] usage = new string[]
-                {
                     "Usage:",
                     "   SilentRoomController.exe -id <light_id> -command <command> [command_args]",
                     "   You can command multiple lights at a time. Seperate multiple lights with a comma ','.",
@@ -45,17 +43,11 @@ namespace SilentRoomControllerv2
                     "   - [8] COMMAND_DISABLE_COLORLOOP: Disables the color-loop effect.",
                     "",
                     "The commands marked with '(*)' need to have a parameter in the [command_args] parameter."
-                };
+            };
 
-                foreach (string line in usage)
-                {
-                    Console.WriteLine(line);
-                }
-            }
-
-            else
+            foreach (string line in usage)
             {
-                Console.WriteLine("The bridge failed to ping. The program will now exit.");
+                Console.WriteLine(line);
             }
         }
 
@@ -336,23 +328,6 @@ namespace SilentRoomControllerv2
                     new HueCommand(Commands.COMMAND_ON).Execute(ipAddress, apiKey, lightID);
             }
             catch (Exception ex) { Console.WriteLine(ex.Message); }
-        }
-
-        public static bool PingBridge(string ipAddress, string apiKey)
-        {
-            Console.WriteLine("Pinging bridge...");
-            Ping bridgePing = new Ping();
-            IPStatus status = new IPStatus();
-            bridgePing.PingCompleted += (o, ev) => {
-                status = ev.Reply.Status;
-            };
-
-            bridgePing.Send(ipAddress);
-
-            if (status == IPStatus.Success)
-                return true;
-            else
-                return false;
         }
 
         public static void PrintLights(string ipAddress, string apiKey)
