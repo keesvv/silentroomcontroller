@@ -1,12 +1,10 @@
-SilentRoomController 2.0
+SilentRoomController
 ========================
 💡 Control your Philips Hue lights with a command-line interface.
 
-### A fresh new start for SilentRoomController. Faster. Smaller. Less complicated.
+**What’s in the box?**
 
-**What’s new?**
-
--   Command-line only support
+-   Command-line interface
 
 -   Support for registering users
 
@@ -17,16 +15,6 @@ SilentRoomController 2.0
 -   Support for commanding multiple lights at a time
 
 -   Listing for available lights
-
- 
-
-**Fresh code, completely built from scratch.**
-
-Yes, this isn’t an ‘update’, as you would tell because the program is called
-SilentRoomController 2.0. I have decided to code SilentRoomController 2.0
-completely from scratch. Why? Because after a while, the code got too complex
-and I wasn’t able to orientate as easy as in the first place.
-
  
 
 **Supported Commands**
@@ -49,7 +37,7 @@ and I wasn’t able to orientate as easy as in the first place.
 
  
 
-**Command-line Examples**
+# Command-line Examples
 
 First off, you need to specify which lights you want to target. Let’s say that
 you have two lights connected to your bridge:
@@ -58,8 +46,6 @@ you have two lights connected to your bridge:
 
 `[2] Bedroom`
 
- 
-
 If you want to target `[1]`, you could type:
 
 `SilentRoomController.exe -id 1 -command <command> [command_args]`
@@ -67,9 +53,7 @@ If you want to target `[1]`, you could type:
 You can also specify multiple lights as a target. For example, if you want both
 lights `[1]` and `[2]` as a target. To do so, type the following:
 
-`SilentRoomController.exe -id 1,2 -command <command> [command_args]`
-
- 
+`SilentRoomController.exe -id 1,2 -command <command> [command_args]` 
 
 Here comes the command part. So now that you have specified which light(s) you
 want as a target, you can choose a supported command. Commands are written
@@ -82,8 +66,6 @@ The same goes for turning off both lights:
 
 `SilentRoomController.exe -id 1,2 -command 2`
 
- 
-
 You might have noticed the `[command_args]` parameter. This is for the commands
 which contains the ‘(\*)’ symbol. This stands for: command parameter required.
 This means that it needs another argument within the arguments. For example, the
@@ -94,8 +76,6 @@ Let’s say you want the light to be having brightness 100, you type the
 following:
 
 `SilentRoomController.exe -id 1 -command 4 100`
-
- 
 
 This is the end of the examples. If you’d like to know more about using
 SilentRoomController 2.0, consider sending me a message.
