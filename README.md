@@ -1,6 +1,6 @@
 SilentRoomController
 ========================
-💡 Control your Philips Hue lights with a command-line interface.
+💡 Control your Philips Hue lights using a command-line interface.
 
 **What’s in the box?**
 
