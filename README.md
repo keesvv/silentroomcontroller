@@ -1,5 +1,6 @@
 SilentRoomController 2.0
 ========================
+💡 Control your Philips Hue lights with a command-line interface.
 
 ### A fresh new start for SilentRoomController. Faster. Smaller. Less complicated.
 
