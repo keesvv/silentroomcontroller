@@ -1,5 +1,6 @@
 SilentRoomController
 ========================
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Build status](https://ci.appveyor.com/api/projects/status/3n467nvo92t7aoj6?svg=true)](https://ci.appveyor.com/project/keesvv/silentroomcontroller)
 [![CodeFactor](https://www.codefactor.io/repository/github/keesvv/silentroomcontroller/badge)](https://www.codefactor.io/repository/github/keesvv/silentroomcontroller)
 
