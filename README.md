@@ -6,7 +6,8 @@ SilentRoomController
 
 💡 Control your Philips Hue lights using a command-line interface.
 
-![Screenshot](https://github.com/keesvv/silentroomcontroller/raw/master/img/screenshots/screenshot.PNG)
+<img src="https://github.com/keesvv/silentroomcontroller/raw/master/img/screenshots/screenshot.PNG" alt="Screenshot" align="left" height="704" width="920">
+
 > [Hyper](https://github.com/zeit/hyper) is used as terminal application shown in the image.
 > The corresponding theme is called [hyperterm-atom-dark](https://www.npmjs.com/package/hyperterm-atom-dark).
 
