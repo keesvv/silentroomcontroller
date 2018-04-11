@@ -43,7 +43,6 @@ namespace SilentRoomController
 
         public static void ParseArgs()
         {
-
             // Indicates if anything is left blank.
             bool isNull = false;
 
@@ -74,7 +73,9 @@ namespace SilentRoomController
                     if (Args[4] != null)
                         CommandArguments = Args[4];
                 }
-                catch (Exception) { }
+                catch (Exception)
+                {
+                }
             }
             catch (Exception)
             {
