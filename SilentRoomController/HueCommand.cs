@@ -24,7 +24,7 @@ namespace SilentRoomController
         public void Execute(string ipAddress, string apiKey, int lightID, string arguments = null, bool bypassMessage = false)
         {
             string command = "";
-            string targetURI = BaseURI + "lights/" + lightID + "/state";
+            string targetUri = BaseURI + "lights/" + lightID + "/state";
 
             switch (SetCommand)
             {
@@ -59,7 +59,7 @@ namespace SilentRoomController
             bool success = false;
             try
             {
-                Utilities.SendPUTRequest(targetURI, command);
+                Utilities.SendHttpRequest(Utilities.HttpRequestTypes.PUT, targetUri, command);
                 success = true;
             }
             catch (Exception)

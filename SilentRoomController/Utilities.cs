@@ -68,7 +68,10 @@ namespace SilentRoomController
                         HueCommand.APIKey = configReader.ReadLine();
                         configReader.Close();
                     }
-                    catch (Exception) { Console.WriteLine("Unable to parse the config file. Please run under Administrator privileges."); }
+                    catch (Exception)
+                    {
+                        Console.WriteLine("Unable to parse the config file. Please run under Administrator privileges.");
+                    }
                     ParseArgs();
                 }
                 else
@@ -78,7 +81,9 @@ namespace SilentRoomController
                         if (Args[0] == "--setup")
                             Setup();
                     }
-                    catch (Exception) { }
+                    catch (Exception)
+                    {
+                    }
 
                     Console.ForegroundColor = ConsoleColor.Yellow;
                     Console.WriteLine(setupWarning);
@@ -91,68 +96,27 @@ namespace SilentRoomController
             }
         }
 
-        public static string SendPUTRequest(string targetURI, string command)
+        public static string SendHttpRequest(HttpRequestTypes requestType, string targetUri, string command = null)
         {
-            WebRequest request = WebRequest.Create(targetURI);
-            request.Method = "PUT";
-            string postData = command;
-            byte[] byteArray = Encoding.UTF8.GetBytes(postData);
-
+            WebRequest request = WebRequest.Create(targetUri);
+            request.Method = requestType.ToString();
             request.ContentType = "application/json";
-            request.ContentLength = byteArray.Length;
+            
+            if (requestType == HttpRequestTypes.POST || requestType == HttpRequestTypes.PUT)
+            {
+                string postData = command;
+                byte[] byteArray = Encoding.UTF8.GetBytes(postData);
+                request.ContentLength = byteArray.Length;
 
-            var dataStream = request.GetRequestStream();
-            dataStream.Write(byteArray, 0, byteArray.Length);
-            dataStream.Close();
-
+                var requestStream = request.GetRequestStream();
+                requestStream.Write(byteArray, 0, byteArray.Length);
+                requestStream.Close();
+            }
+            
             WebResponse response = request.GetResponse();
-            dataStream = response.GetResponseStream();
+            var responseStream = response.GetResponseStream();
 
-            StreamReader reader = new StreamReader(dataStream);
-            string readerString = reader.ReadToEnd();
-
-            response.Close();
-            reader.Close();
-
-            return readerString;
-        }
-
-        public static string SendPOSTRequest(string targetURI, string command)
-        {
-            WebRequest request = WebRequest.Create(targetURI);
-            request.Method = "POST";
-            string postData = command;
-            byte[] byteArray = Encoding.UTF8.GetBytes(postData);
-
-            request.ContentType = "application/json";
-            request.ContentLength = byteArray.Length;
-
-            var dataStream = request.GetRequestStream();
-            dataStream.Write(byteArray, 0, byteArray.Length);
-            dataStream.Close();
-
-            WebResponse response = request.GetResponse();
-            dataStream = response.GetResponseStream();
-
-            StreamReader reader = new StreamReader(dataStream);
-            string readerString = reader.ReadToEnd();
-
-            response.Close();
-            reader.Close();
-
-            return readerString;
-        }
-
-        public static string SendGETRequest(string targetURI)
-        {
-            WebRequest request = WebRequest.Create(targetURI);
-            request.Method = "GET";
-            request.ContentType = "application/json";
-
-            WebResponse response = request.GetResponse();
-            var dataStream = response.GetResponseStream();
-
-            StreamReader reader = new StreamReader(dataStream);
+            StreamReader reader = new StreamReader(responseStream);
             string readerString = reader.ReadToEnd();
 
             response.Close();
@@ -254,7 +218,10 @@ namespace SilentRoomController
             {
                 File.WriteAllText("SilentRoomController.conf", ipAddress + "\n" + apiKey);
             }
-            catch (Exception) { Console.WriteLine("Write to file failed. You might need to restart the setup under Administrator privileges."); }
+            catch (Exception)
+            {
+                Console.WriteLine("Write to file failed. You might need to restart the setup under Administrator privileges.");
+            }
 
             Console.ForegroundColor = ConsoleColor.Red;
 
@@ -273,7 +240,7 @@ namespace SilentRoomController
 
         public static string RegisterUser(string appName)
         {
-            string username = SendPOSTRequest(APIUri, "{\"devicetype\": \"" + appName + "\"}");
+            string username = SendHttpRequest(HttpRequestTypes.POST, APIUri, "{\"devicetype\": \"" + appName + "\"}");
             return username;
         }
 
@@ -281,7 +248,7 @@ namespace SilentRoomController
         {
             string uri = HueCommand.BaseURI + "lights/" + lightID;
 
-            string rawJSON = SendGETRequest(uri);
+            string rawJSON = SendHttpRequest(HttpRequestTypes.GET, uri);
             Light light = JsonConvert.DeserializeObject<Light>(rawJSON);
 
             return light;
@@ -291,7 +258,7 @@ namespace SilentRoomController
         {
             string uri = "http://" + ipAddress + "/api/" + apiKey + "/lights/";
             List<Light> lights = new List<Light>();
-            JToken token = JToken.Parse(SendGETRequest(uri));
+            JToken token = JToken.Parse(SendHttpRequest(HttpRequestTypes.GET, uri));
             if(token.Type == JTokenType.Object)
             {
                 JObject lightJSON = (JObject)token;
@@ -308,7 +275,7 @@ namespace SilentRoomController
 
         public static Bridge[] LocateBridges()
         {
-            string rawJSON = SendGETRequest("https://www.meethue.com/api/nupnp");
+            string rawJSON = SendHttpRequest(HttpRequestTypes.GET, "https://www.meethue.com/api/nupnp");
             Bridge[] bridges = JsonConvert.DeserializeObject<Bridge[]>(rawJSON);
             return bridges;
         }
@@ -323,7 +290,10 @@ namespace SilentRoomController
                 else if (light.State.Enabled == false)
                     new HueCommand(Commands.COMMAND_ON).Execute(ipAddress, apiKey, lightID);
             }
-            catch (Exception ex) { Console.WriteLine(ex.Message); }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
         public static void PrintLights(string ipAddress, string apiKey)
@@ -333,7 +303,9 @@ namespace SilentRoomController
             try
             {
                 lights = GetLights(ipAddress, apiKey);
-            } catch(Exception) { }
+            } catch(Exception)
+            {
+            }
 
             Console.Clear();
 
@@ -356,6 +328,13 @@ namespace SilentRoomController
                 }
                 Console.WriteLine("======== [ -=+=-=+=-=+=-=+= ] ========\n");
             }
+        }
+
+        public enum HttpRequestTypes
+        {
+            GET = 1,
+            PUT = 2,
+            POST = 3
         }
     }
 }
