@@ -3,16 +3,15 @@ using System.IO;
 using System.Net;
 using System.Text;
 
-using static SilentRoomControllerv2.Serialization;
-using static SilentRoomControllerv2.Program;
+using static SilentRoomController.Serialization;
+using static SilentRoomController.Program;
 
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Threading;
-using System.Net.NetworkInformation;
 
-namespace SilentRoomControllerv2
+namespace SilentRoomController
 {
     public class Utilities
     {
@@ -60,11 +59,11 @@ namespace SilentRoomControllerv2
 
             try
             {
-                if (File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SilentRoomController.conf"))
+                if (File.Exists("SilentRoomController.conf"))
                 {
                     try
                     {
-                        StreamReader configReader = new StreamReader(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SilentRoomController.conf");
+                        StreamReader configReader = new StreamReader("SilentRoomController.conf");
                         BridgeIP = configReader.ReadLine();
                         APIKey = configReader.ReadLine();
                         configReader.Close();
@@ -225,10 +224,9 @@ namespace SilentRoomControllerv2
                     objResult = null;
                 }
 
-                JToken objError;
-                if(objResult.TryGetValue("error", out objError))
+                if (objResult.TryGetValue("error", out JToken objError))
                 {
-                    if(objError["type"].Value<int>() == 101)
+                    if (objError["type"].Value<int>() == 101)
                     {
                         Console.WriteLine("Link button was not pressed.");
                         Thread.Sleep(1000);
@@ -254,9 +252,7 @@ namespace SilentRoomControllerv2
 
             try
             {
-                File.WriteAllText(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
-                    @"\SilentRoomController.conf",
-                    ipAddress + "\n" + apiKey);
+                File.WriteAllText("SilentRoomController.conf", ipAddress + "\n" + apiKey);
             }
             catch (Exception) { Console.WriteLine("Write to file failed. You might need to restart the setup under Administrator privileges."); }
 

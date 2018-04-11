@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace SilentRoomControllerv2
+namespace SilentRoomController
 {
     public class Serialization
     {

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using static SilentRoomControllerv2.Program;
+using static SilentRoomController.Program;
 
-namespace SilentRoomControllerv2
+namespace SilentRoomController
 {
     public class Program
     {
@@ -85,7 +85,6 @@ namespace SilentRoomControllerv2
                 catch (Exception) { }
             }
             catch (Exception) { Utilities.PrintUsage(); }
-
             #endregion
 
             // Checks if the anything is left blank.

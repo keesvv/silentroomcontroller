@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26430.14
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SilentRoomController 2.0", "SilentRoomController 2.0.csproj", "{E8712435-5A46-420F-BF76-56F0F5D48C4C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SilentRoomController", "SilentRoomController.csproj", "{E8712435-5A46-420F-BF76-56F0F5D48C4C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -18,5 +18,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {882DD0B4-BDD6-4D04-99D1-E0DAE3BC6353}
 	EndGlobalSection
 EndGlobal
