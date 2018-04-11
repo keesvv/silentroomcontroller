@@ -4,7 +4,7 @@ using System.Net;
 using System.Text;
 
 using static SilentRoomController.Serialization;
-using static SilentRoomController.Program;
+using static SilentRoomController.SilentRoomController;
 
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -18,7 +18,7 @@ namespace SilentRoomController
         public static void PrintUsage()
         {
             Console.Clear();
-            PrintLights(BridgeIP, APIKey);
+            PrintLights(HueCommand.BridgeIP, HueCommand.APIKey);
             string[] usage = new string[]
             {
                     "Usage:",
@@ -64,8 +64,8 @@ namespace SilentRoomController
                     try
                     {
                         StreamReader configReader = new StreamReader("SilentRoomController.conf");
-                        BridgeIP = configReader.ReadLine();
-                        APIKey = configReader.ReadLine();
+                        HueCommand.BridgeIP = configReader.ReadLine();
+                        HueCommand.APIKey = configReader.ReadLine();
                         configReader.Close();
                     }
                     catch (Exception) { Console.WriteLine("Unable to parse the config file. Please run under Administrator privileges."); }
@@ -195,7 +195,7 @@ namespace SilentRoomController
 
             Console.Write("Bridge IP Address: ");
             ipAddress = Console.ReadLine();
-            BridgeIP = ipAddress;
+            HueCommand.BridgeIP = ipAddress;
 
             Console.ForegroundColor = ConsoleColor.DarkGray;
             Console.WriteLine("\nThe API key can be registered by typing /register ." +
@@ -279,7 +279,7 @@ namespace SilentRoomController
 
         public static Light GetLight(string ipAddress, string apiKey, int lightID)
         {
-            string uri = BaseURI + "lights/" + lightID;
+            string uri = HueCommand.BaseURI + "lights/" + lightID;
 
             string rawJSON = SendGETRequest(uri);
             Light light = JsonConvert.DeserializeObject<Light>(rawJSON);
