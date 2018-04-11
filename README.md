@@ -1,5 +1,7 @@
 SilentRoomController
 ========================
+[![Build status](https://ci.appveyor.com/api/projects/status/3n467nvo92t7aoj6?svg=true)](https://ci.appveyor.com/project/keesvv/silentroomcontroller)
+
 💡 Control your Philips Hue lights using a command-line interface.
 
 **What’s in the box?**
