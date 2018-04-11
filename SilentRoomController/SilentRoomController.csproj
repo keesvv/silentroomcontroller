@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands.cs" />
     <Compile Include="HueCommand.cs" />
     <Compile Include="SilentRoomController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
