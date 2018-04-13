@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using NDesk.Options;
 
 namespace SilentRoomController
 {
@@ -7,14 +8,14 @@ namespace SilentRoomController
     {
          /*
          *                                             *
-         *    -=+ [ SilentRoomController 2.0 ] +=-     *
+         *       -=+ [ SilentRoomController ] +=-      *
          *        Made by Kees van Voorthuizen.        *
          *         Credits to Philips (c) Hue.         *
          *                                             *
          */
         
         public static string[] Args { get; set; }
-        public static int[] LightIDs { get; set; }
+        public static List<int> LightIDs { get; set; }
         public static HueCommand Command { get; set; }
         public static string CommandArguments { get; set; }
 
@@ -48,38 +49,54 @@ namespace SilentRoomController
 
             // Parses the arguments and store them into variables.
             #region Command-Line Arguments Parser
+            var options = new OptionSet()
+            {
+                {
+                    "i|id=",
+                    "The light ID(s) to select for controlling the lights.",
+                    (int v) => LightIDs.Add(v)
+                },
+
+                {
+                    "c|command=",
+                    "the number of {TIMES} to repeat the greeting.\n" +
+                    "this must be an integer.",
+                    (int v) => Command = null
+                },
+
+
+                {
+                    "v",
+                    "increase debug message verbosity",
+                    v => Console.WriteLine()
+                },
+
+                {
+                    "h|help",
+                    "show this message and exit",
+                    v => Console.WriteLine()
+                },
+            };
+
+            string[] stringIDs = Args[1].Split(',');
+            List<int> IDs = new List<int>();
+            foreach (var id in stringIDs)
+            {
+                int finalID = int.Parse(id);
+                IDs.Add(finalID);
+            }
+
+            //LightIDs = IDs.ToArray();
+            Command = new HueCommand((Commands)int.Parse(Args[3]));
+            isNull = false;
+
             try
             {
-                if (Args[0] == "-id")
-                {
-                    string[] stringIDs = Args[1].Split(',');
-                    List<int> IDs = new List<int>();
-                    foreach (var id in stringIDs)
-                    {
-                        int finalID = int.Parse(id);
-                        IDs.Add(finalID);
-                    }
-
-                    LightIDs = IDs.ToArray();
-                }
-                else isNull = true;
-
-                if (Args[2] == "-command")
-                    Command = new HueCommand((Commands)int.Parse(Args[3]));
-                else isNull = true;
-
-                try
-                {
-                    if (Args[4] != null)
-                        CommandArguments = Args[4];
-                }
-                catch (Exception)
-                {
-                }
+                if (Args[4] != null)
+                    CommandArguments = Args[4];
             }
             catch (Exception)
             {
-                Utilities.PrintUsage();
             }
             #endregion
 
@@ -89,10 +106,10 @@ namespace SilentRoomController
                 if (isNull != true)
                     foreach (var id in LightIDs)
                     {
-                        bool bypassMsg = false;
+                        bool quietMode = false;
                         if (Command.SetCommand == Commands.COMMAND_TOGGLE)
-                            bypassMsg = true;
-                        Command.Execute(HueCommand.BridgeIP, HueCommand.APIKey, id, CommandArguments, bypassMsg);
+                            quietMode = true;
+                        Command.Execute(HueCommand.BridgeIP, HueCommand.APIKey, id, CommandArguments, quietMode);
                     }
                 else Utilities.PrintUsage();
             }

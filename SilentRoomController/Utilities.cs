@@ -28,9 +28,6 @@ namespace SilentRoomController
                     "   For example:",
                     "       SilentRoomController.exe -id 1,2,3 -command 2",
                     "",
-                    "   If you would like to perform multiple commands at once, try SilentRoomController Console:",
-                    "       SilentRoomController.exe --console",
-                    "",
                     "Available Commands:",
                     "   - [1] COMMAND_ON: Turns on the specified light.",
                     "   - [2] COMMAND_OFF: Turns of the specified light.",
@@ -313,7 +310,7 @@ namespace SilentRoomController
                 Console.WriteLine("Failed to load available lights. The bridge may be unreachable.");
             else
             {
-                Console.WriteLine("-=+ [ SilentRoomController 2.0 ] +=-");
+                Console.WriteLine("-=+ [ SilentRoomController ] +=-");
                 Console.WriteLine("\n======== [ AVAILABLE LIGHTS ] ========");
                 foreach (Light light in lights)
                 {
@@ -321,8 +318,9 @@ namespace SilentRoomController
                         Console.WriteLine("[" + light.ID + "] " + light.Name);
                     else if (light.State.Reachable == false)
                     {
+                        Console.Write("[" + light.ID + "] " + light.Name);
                         Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine("[" + light.ID + "] " + light.Name + " (Unreachable)");
+                        Console.Write(" (Unreachable)\n");
                         Console.ResetColor();
                     }
                 }
